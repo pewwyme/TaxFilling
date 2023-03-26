@@ -1,0 +1,43 @@
+.mat-stepper-horizontal {
+  margin-top: 8px;
+}
+
+.mat-mdc-form-field {
+  margin-top: 16px;
+}
+.mat-stepper-horizontal, .mat-stepper-vertical {
+  background-color: transparent;
+}
+::ng-deep .mat-step-header .mat-step-icon-selected, .mat-step-header .mat-step-icon-state-done, .mat-step-header .mat-step-icon-state-edit {
+  background-color: #363a3f !important;
+  color: white;
+}
+::ng-deep .mat-step-header .mat-step-icon {
+  background-color: rgb(106 106 106 / 54%);
+  color: white;
+}
+::ng-deep.mat-radio-button.mat-accent .mat-radio-ripple .mat-ripple-element {
+  opacity: 0 !important; /*click effect color change*/
+  background-color: #49474e !important;
+}
+::ng-deep .mat-radio-button.mat-accent .mat-radio-inner-circle {
+  background-color: #49474e !important; /*inner circle color change*/
+}
+::ng-deep.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
+  border-color: #49474e !important; /*outer ring color change*/
+}
+.activestep{
+  background-color: #363a3f !important;
+}
+.stepcircle {
+  color: white;
+  border-radius: 50%;
+  height: 24px;
+  width: 24px;
+  flex-shrink: 0;
+  position: relative;
+  -webkit-tap-highlight-color: transparent;
+}
+.example-spacer {
+  flex: 1 1 auto;
+}

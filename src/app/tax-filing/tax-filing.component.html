@@ -1,0 +1,397 @@
+
+<mat-toolbar class="header">
+  <span>My Company</span>
+  <span class="example-spacer"></span>
+  <span class="txt-14">Time in Thailand {{this.data.ToDay | date:"HH:MM" }} | {{this.data.ToDay | date:'mediumDate' }}</span>
+  <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
+    <svg class="bi" width="20" height="20" fill="currentColor">
+      <use xlink:href="bootstrap-icons.svg#person-circle"/>
+    </svg>
+  </button>
+</mat-toolbar>
+<div class="container">
+  <div>
+    <section class="py-4 text-center">
+      <div class="row py-lg-3">
+        <div class="col-md-8 mx-auto">
+          <h1 class="fw-blod"><b>Submit Tax Filing</b></h1>
+        </div>
+        <div class="col-md-5 mx-auto">
+          <div class="row">
+            <div class="col">
+              <span class="Circlegray" [ngClass]="{'CircleBlack' : step==0}">1</span>
+              <br>
+              <span *ngIf="filingType=='0'"> Input Details</span>
+              <span *ngIf="filingType=='1'"> Input Tax</span>
+            </div>
+            <div class="col"><hr></div>
+            <div class="col">
+              <span class="Circlegray" [ngClass]="{'CircleBlack' : step==1}">2</span>
+              <br>
+              <span>Review & Confirm</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  <!-- input container step 0-->
+  <div class="col-md-8 offset-md-2 col-xs-8 offset-xs-2" *ngIf="step==0">
+    <div class="card">
+      <div class="card-body">
+        <!-- Website -->
+        <!-- 1. tax filling -->
+        <div class="container py-3">
+          <div class="row margin-tb-size align-items-start">
+            <div class="col nopadding">
+                <p class="card-title fs-6"><b>1. Tax Filing Detail</b></p>
+                <hr>
+            </div>
+          </div>
+          <div class="row margin-tb-size align-items-start">
+            <div class="col nopadding">
+              <p class="card-text">Type of filling <span class="c-red">*</span></p>
+            </div>
+          </div>
+          <div class="row align-items-start py-3">
+            <div class="col nopadding">
+              <mat-radio-group aria-label="Select an option" [(ngModel)]="filingType" (change)="changefilingType()">
+                <mat-radio-button value="{{item.value}}" *ngFor="let item of radioType">
+                  {{item.name}}
+                  <svg class="bi" width="15" height="15" fill="currentColor"  matTooltip="{{item.namedesc}}" matTooltipPosition="above">
+                    <use xlink:href="bootstrap-icons.svg#question-circle-fill"/>
+                  </svg>
+                &nbsp;&nbsp;&nbsp;
+                </mat-radio-button>
+              </mat-radio-group>
+            </div>
+        </div>
+      </div>
+      <!-- filing detail Ordinary -->
+      <div *ngIf="filingType=='0'">
+        <div class="container">
+          <div class="row align-items-start py-2">
+              <div class="col nopadding">
+                <p class="card-text">VAT Month <span class="c-red">*</span></p>
+                <select class="form-select" [(ngModel)]="data.Month">
+                  <option *ngFor="let item of filterMonth(month)" value="{{item.month}}">{{item.month}}</option>
+                </select>
+              </div>
+              <div class="col input-paddintop">
+                <select class="form-select" [(ngModel)]="data.Year" (change)="checkMionthByYear()">
+                  <option *ngFor="let item of year" value="{{item}}">{{item}}</option>
+                </select>
+              </div>
+              <div class="col"></div>
+          </div>
+        </div>
+        <!-- 2.tax computation -->
+        <div class="container py-3">
+          <div class="row margin-tb-size align-items-start">
+            <div class="col col-sm-4 nopadding">
+                <p class="card-title fs-6"><b>2. Tax Computation</b></p>
+            </div>
+            <div class="col"></div>
+            <div class="col col-sm-5 pull-right"><u>View Exchange Rate</u></div>
+          </div>
+          <div class="row margin-tb-size align-items-start">
+            <div class="col nopadding">
+              <hr>
+            </div>
+          </div>
+          <div class="row margin-tb-size align-items-start">
+            <div class="col nopadding">
+              <p class="card-text"><b>Provide total value taxable eletronic service <span class="c-red">*</span></b></p>
+            </div>
+          </div>
+          <div class="row align-items-start py-3">
+            <div class="col-sm-5 col-md-8 nopadding div-txt-center">
+              1. Total value of taxable eletronic service exclusive of VAT
+            </div>
+            <div  class="col">
+              <div class="input-group">
+                <input type="text" class="form-control txt-right border-right-none"
+                [(ngModel)]="saleAmount"  (keypress)="numberOnly($event)" (blur)="onBlur($event)"
+                onchange="(function(el){el.value=parseFloat(el.value).toFixed(2);})(this)" min="0.00" step="1.00"
+                (change)="changesaleAmount(saleAmount)"
+                numbers-only="numbers-only" >
+                <span class="input-group-text border-left-none bgWhite"><b>THB</b></span>
+              </div>
+
+            </div>
+          </div>
+          <div class="row align-items-start py-3">
+            <div class="col-sm-5 col-md-8 nopadding div-txt-center">
+              2. Total VAT to be retemitted (7% of 1.)
+            </div>
+            <div  class="col">
+              <div class="input-group">
+                <input class="form-control txt-right border-right-none" type="text"
+                [(ngModel)]="taxAmount"
+                (keypress)="numberOnly($event)"
+                [ngModelOptions]="{updateOn:'blur'}"(keypress)="numberOnly($event)" (blur)="onBlur($event)"
+                onchange="(function(el){el.value=parseFloat(el.value).toFixed(2);})(this)" min="0.00" step="1.00" numbers-only="numbers-only"
+                (ngModelChange)="taxAmount=$event"
+                (ngModelChange)="changetaxAmount($event)"/>
+                <span class="input-group-text border-left-none bgWhite"><b>THB</b></span>
+              </div>
+              <span class="c-red" *ngIf="InvalidTax">Invalid Tax</span>
+            </div>
+          </div>
+        </div>
+      </div>
+       <!-- filing detail additional -->
+      <div *ngIf="filingType=='1'">
+        <div class="container">
+          <div class="row align-items-start py-2">
+              <div class="col nopadding">
+                <p class="card-text">TAX Month <span class="c-red">*</span></p>
+                <select class="form-select" aria-label="Default select example">
+                  <option *ngFor="let item of filterMonth(month)" value="{{item.month}}">{{item.month}}</option>
+                </select>
+              </div>
+              <div class="col input-paddintop">
+                <select class="form-select" [(ngModel)]="data.Year" (change)="checkMionthByYear()">
+                  <option *ngFor="let item of year" value="{{item}}">{{item}}</option>
+                </select>
+              </div>
+              <div class="col-md-3 offset-md-1 col-xs-6 offset-xs-2">
+                <p class="card-text">Type <span class="c-red">*</span></p>
+                <select class="form-select" [(ngModel)]="data.Type">
+                  <option value="On-Time">On-Time</option>
+                  <option value="In-Time">In-Time</option>
+                </select>
+              </div>
+          </div>
+        </div>
+        <!-- 2.tax computation -->
+        <div class="container py-3">
+          <div class="row margin-tb-size align-items-start">
+            <div class="col col-sm-4 nopadding">
+                <p class="card-title fs-6"><b>2. Tax Computation</b></p>
+            </div>
+            <div class="col"></div>
+            <div class="col col-sm-5 pull-right"><u>View Exchange Rate</u></div>
+          </div>
+          <div class="row margin-tb-size align-items-start">
+            <div class="col nopadding">
+              <hr>
+            </div>
+          </div>
+          <div class="row margin-tb-size align-items-start">
+            <div class="col nopadding">
+              <p class="card-text"><b>Provide total value taxable eletronic service <span class="c-red">*</span></b></p>
+            </div>
+          </div>
+          <div class="row align-items-start py-3">
+            <div class="col-sm-5 col-md-8 nopadding div-txt-center">
+              1. Total value of taxable eletronic service exclusive of VAT
+            </div>
+            <div  class="col">
+              <div class="input-group">
+                <input type="text" class="form-control txt-right border-right-none"
+                [(ngModel)]="saleAmount"  (keypress)="numberOnly($event)" (blur)="onBlur($event)"
+                onchange="(function(el){el.value=parseFloat(el.value).toFixed(2);})(this)" min="0.00" step="1.00"
+                (change)="changesaleAmount(saleAmount)"
+                numbers-only="numbers-only" >
+                <span class="input-group-text border-left-none bgWhite"><b>THB</b></span>
+              </div>
+
+            </div>
+          </div>
+          <div class="row align-items-start py-3">
+            <div class="col-sm-5 col-md-8 nopadding div-txt-center">
+              2. Total VAT to be retemitted (7% of 1.)
+            </div>
+            <div class="col">
+              <div class="input-group">
+                <input class="form-control txt-right border-right-none" type="text"
+                [(ngModel)]="taxAmount"
+                (keypress)="numberOnly($event)"
+                [ngModelOptions]="{updateOn:'blur'}"   (keypress)="numberOnly($event)" (blur)="onBlur($event)"
+                onchange="(function(el){el.value=parseFloat(el.value).toFixed(2);})(this)" min="0.00" step="1.00" numbers-only="numbers-only"
+                (ngModelChange)="taxAmount=$event"
+                (ngModelChange)="changetaxAmount($event)"/>
+                <span class="input-group-text border-left-none bgWhite"><b>THB</b></span>
+              </div>
+              <span class="c-red" *ngIf="InvalidTax">Invalid Tax</span>
+            </div>
+          </div>
+          <div class="row margin-tb-size align-items-start">
+            <div class="col nopadding">
+              <p class="card-text"><b>Incase of late filling and payment, or additional filling</b></p>
+            </div>
+          </div>
+          <div class="row align-items-start py-3">
+            <div class="col-sm-5 col-md-8 nopadding div-txt-center">
+              3. Surcharge
+              <svg class="bi" width="15" height="15" fill="currentColor"  matTooltip="Tax Amount * 0.1" matTooltipPosition="above">
+                <use xlink:href="bootstrap-icons.svg#question-circle-fill"/>
+              </svg>
+            </div>
+            <div  class="col">
+              <div class="input-group">
+                <input class="form-control txt-right border-right-none" type="text"
+                [(ngModel)]="surcharge"
+                [ngModelOptions]="{updateOn:'blur'}" disabled   (keypress)="numberOnly($event)" (blur)="onBlur($event)"
+                onchange="(function(el){el.value=parseFloat(el.value).toFixed(2);})(this)" min="0.00"step="1.00" numbers-only="numbers-only"
+                (ngModelChange)="surcharge=$event" />
+                <span class="input-group-text border-left-none" disabled><b>THB</b></span>
+              </div>
+            </div>
+          </div>
+          <div class="row align-items-start py-3">
+            <div class="col-sm-5 col-md-8 nopadding div-txt-center">
+              4. Penalty
+              <svg class="bi" width="15" height="15" fill="currentColor" matTooltip="Default 200.00" matTooltipPosition="above">
+                <use xlink:href="bootstrap-icons.svg#question-circle-fill"/>
+              </svg>
+            </div>
+            <div  class="col">
+              <div class="input-group">
+                <input class="form-control txt-right border-right-none" type="text"
+                [(ngModel)]="penalty"
+                [ngModelOptions]="{updateOn:'blur'}" disabled   (keypress)="numberOnly($event)" (blur)="onBlur($event)"
+                onchange="(function(el){el.value=parseFloat(el.value).toFixed(2);})(this)" min="0.00" step="1.00" numbers-only="numbers-only"
+                (ngModelChange)="penalty=$event" />
+                <span class="input-group-text border-left-none" disabled><b>THB</b></span>
+              </div>
+            </div>
+          </div>
+          <div class="row align-items-start py-3">
+            <div class="col-sm-5 col-md-8 nopadding div-txt-center">
+              5. Total amount of VAT, sucharge, and penalty to be remitted
+              <svg class="bi" width="15" height="15" fill="currentColor"  matTooltip="TaxAmount + Surcharge + Penalty" matTooltipPosition="above">
+                <use xlink:href="bootstrap-icons.svg#question-circle-fill"/>
+              </svg>
+            </div>
+            <div  class="col">
+              <div class="input-group">
+                <input class="form-control txt-right border-right-none" type="text"
+                [(ngModel)]="totalAmount"
+                [ngModelOptions]="{updateOn:'blur'}" disabled   (keypress)="numberOnly($event)" (blur)="onBlur($event)"
+                onchange="(function(el){el.value=parseFloat(el.value).toFixed(2);})(this)" min="0.00"step="1.00" numbers-only="numbers-only"
+                (ngModelChange)="totalAmount=$event"/>
+                <span class="input-group-text border-left-none" disabled><b>THB</b></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+    </div>
+  </div>
+  <!-- input container step 1-->
+  <div class="col-md-8 offset-md-2 col-xs-8 offset-xs-2" *ngIf="step==1">
+    <div class="card">
+      <div class="card-body">
+        <!-- Tax filling detail -->
+        <div class="container py-3">
+          <div class="row margin-tb-size align-items-start">
+            <div class="col nopadding">
+                <p class="card-title fs-6"><b>Tax Filing Detail</b></p>
+                <hr>
+            </div>
+          </div>
+          <div class="row margin-tb-size align-items-start">
+            <div class="col nopadding">
+              <p class="card-text"><b>Type of filling </b> {{filingName}}</p>
+            </div>
+          </div>
+          <div class="row align-items-start py-3">
+            <div class="col nopadding">
+              <p class="card-text"><b>VAT Month </b> {{data.Month}} {{data.Year}}</p>
+            </div>
+          </div>
+        </div>
+        <!-- Tax computation -->
+        <div class="container py-3">
+          <div class="row margin-tb-size align-items-start">
+            <div class="col nopadding">
+                <p class="card-title fs-6"><b>Tax Computation</b></p>
+                <hr>
+            </div>
+          </div>
+          <div class="row margin-tb-size align-items-start">
+            <div class="col col-md-10 nopadding">
+              <p class="card-text"><b>Total value of taxable eletric sercice exclusive of VAT </b></p>
+            </div>
+            <div class="col pull-right">
+              <span class="txt-right">{{saleAmount  | number : '1.2-2'}} THB</span>
+            </div>
+          </div>
+          <div class="row align-items-start py-3">
+            <div class="col col-md-10 nopadding">
+              <p class="card-text"><b>Total VAT to be remitted </b></p><br>
+              (7% of Total value of taxable electronic service exclusive of VAT)
+            </div>
+            <div class="col pull-right">
+              <span class="txt-right">{{taxAmount  | number : '1.2-2'}} THB</span>
+            </div>
+          </div>
+          <div class="row align-items-start py-3">
+            <div class="col col-md-10 nopadding">
+              <p class="card-text"><b>Total Amount payable </b></p>
+            </div>
+            <div class="col pull-right">
+              <span class="txt-right"><b>{{totalAmount  | number : '1.2-2'}} THB</b></span>
+            </div>
+          </div>
+        </div>
+         <!-- Tax computation -->
+         <div class="container py-3">
+          <div class="row margin-tb-size align-items-start">
+            <div class="col nopadding">
+                <p class="card-title fs-6"><b>Declaration</b></p>
+                <hr>
+            </div>
+          </div>
+          <div class="row margin-tb-size align-items-start">
+            <div class="col nopadding">
+              <p class="card-text">I hereby certify that information given above are true and correct and agree to be bond by such information.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="step==0">
+    <section class="py-2">
+      <div class="row py-lg-3">
+        <div class="col-md-8 offset-md-2 col-xs-8 offset-xs-2 mx-auto nopadding">
+          <div class="align-items-start">
+            <button class="btn btn-light btn-capsule btn-borded"type="button" (click)="filingType='0'"> Back </button>&nbsp;
+            <button class="btn btn-dark btn-capsule" type="button" (click)="nextStep()"> Next </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div *ngIf="step==1">
+    <section class="py-2">
+      <div class="row py-lg-3">
+        <div class="col-md-8 offset-md-2 col-xs-8 offset-xs-2 mx-auto nopadding">
+          <div class="text-center">
+            <button class="btn btn-dark btn-capsule" type="button"  data-bs-toggle="modal" data-bs-target="#exampleModal"> Confirm and Submit </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Tax Data</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        {{taxData| json}}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,98 @@
+/* You can add global styles to this file, and also import other style files */
+@import "~bootstrap/dist/css/bootstrap.css";
+/* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%;background: #f0f0f0;}
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif;background: #f0f0f0; }
+.header{
+    background: white;
+    margin-bottom: 0px;
+    box-shadow: rgb(132 132 132) 0px 1px 5px;
+    opacity: 1;
+}
+.txt-11{
+    font-size: 11px !important;
+}
+.txt-12{
+    font-size: 12px !important;
+}
+.txt-13{
+    font-size: 13px !important;
+}
+.txt-14{
+    font-size: 14px !important;
+}
+.txt-15{
+    font-size: 15px !important;
+}
+.txt-16{
+    font-size: 16px !important;
+}
+.c-red {
+    color: red;
+}
+.nopadding {
+    padding: 0 !important;
+}
+.nopadding-left {
+    padding-left: 0 !important;
+}
+.nopadding-right {
+    padding-right: 0 !important;
+}
+.txt-right{
+    text-align: right !important;
+}
+.div-txt-center{
+    padding-top: 11px !important;
+}
+.border-left-none{
+    border-left: 0;
+}
+.border-right-none{
+    border-right: 0;
+}
+.bgWhite{
+    background-color: #ffffff  !important;
+}
+.btn-capsule{
+  border-radius: 20px;
+}
+.btn-borded {
+  border: 1px solid;
+}
+.input-paddintop{
+  padding-top: 32px;
+}
+.pull-right{
+  text-align: right;
+}
+.pull-left{
+  text-align: left;
+}
+.CircleBlack {
+  background: #252525 !important;
+  border-radius: 0.8em;
+  -moz-border-radius: 0.8em;
+  -webkit-border-radius: 0.8em;
+  color: #ffffff;
+  display: inline-block;
+  line-height: 1.6em;
+  font-size: 16px;
+  margin-right: 15px;
+  text-align: center;
+  width: 1.6em;
+}
+.Circlegray {
+  background: #787878;
+  border-radius: 0.8em;
+  -moz-border-radius: 0.8em;
+  -webkit-border-radius: 0.8em;
+  color: #ffffff;
+  display: inline-block;
+  line-height: 1.6em;
+  font-size: 16px;
+  margin-right: 15px;
+  text-align: center;
+  width: 1.6em;
+}
